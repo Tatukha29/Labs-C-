@@ -5,7 +5,7 @@
         public GroupName(string name)
         {
             Name = name;
-            Course = new CourseNumber(int.Parse(name.Substring(2, 1)));
+            Course = (CourseNumber)int.Parse(name.Substring(2, 1));
             Group = int.Parse(name.Substring(3, 2));
         }
 

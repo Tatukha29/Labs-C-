@@ -20,18 +20,17 @@ namespace Isu.Tests
         [Test]
         public void AddStudentToGroup_StudentHasGroupAndGroupContainsStudent()
         {
-            Group group = _isuService.AddGroup("M3208");
+            Group group = _isuService.AddGroup("L3208");
             Student student = _isuService.AddStudent(group,"Tanya");
-            Assert.Contains(student, group.Students);
+            Assert.AreEqual(group, student.Group);
         }
-
         [Test]
         public void ReachMaxStudentPerGroup_ThrowException()
         {
             Assert.Catch<IsuException>(() =>
             {
                 Group group = _isuService.AddGroup("M3200");
-                for (int i = 1; i <= 25; ++i)
+                for (int i = 1; i <= 30; ++i)
                 {
                     _isuService.AddStudent(group, "Vanya");
                 }
@@ -56,10 +55,11 @@ namespace Isu.Tests
                 Group group = _isuService.AddGroup("M3208");
                 Student student = _isuService.AddStudent(group, "Masha");
                 Group group2 = _isuService.AddGroup("M3200");
-                for (int i = 0; i <= 23; ++i)
+                for (int i = 0; i <= 24; ++i)
                 {
-                    _isuService.AddStudent(group2, "Tanya");
-                } 
+                    _isuService.AddStudent(group, "Tanya");
+                }
+
                 _isuService.ChangeStudentGroup(student, group2);
             });
         }

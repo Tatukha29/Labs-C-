@@ -1,23 +1,19 @@
-﻿using Isu.Services;
+﻿using System;
+using Isu.Services;
 
 namespace Isu.Classes
 {
     public class Student
     {
-        private static int studentId = 100000;
-        public Student(string name)
+        public Student(string name, Group group)
         {
             Name = name;
-            Id = GenericId();
+            Id = new StudentId().Id;
+            Group = group;
         }
 
         public string Name { get; }
-        public int Id { get; set; }
-
-        private int GenericId()
-        {
-            studentId = studentId++;
-            return studentId;
-        }
+        public int Id { get; }
+        public Group Group { get; set; }
     }
 }

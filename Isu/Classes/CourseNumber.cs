@@ -2,20 +2,11 @@
 
 namespace Isu.Classes
 {
-    public class CourseNumber
+    public enum CourseNumber
     {
-        public CourseNumber(int course)
-        {
-            if (course >= 1 && course <= 4)
-            {
-                Course = course;
-            }
-            else
-            {
-                throw new IsuException("Invalid course number");
-            }
-        }
-
-        public int Course { get; }
+        One = 1,
+        Two = 2,
+        Three = 3,
+        Four = 4,
     }
 }

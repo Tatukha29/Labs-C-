@@ -10,38 +10,42 @@ namespace Isu.Service
     {
         private List<Group> _groups = new List<Group>();
         private List<Student> _allstudents = new List<Student>();
-        private int maxAmountStudents = 24;
+        private int _maxAmountStudents = 24;
+        private List<string> _faculties = new List<string>() { "M3", "L3" };
 
         public Group AddGroup(string name)
         {
-            if (name[0] < 'A' || name[0] > 'Z')
+            bool check = false;
+            string n = name.Substring(0, 2);
+            foreach (var faculty in _faculties)
+            {
+                if (faculty == n)
+                {
+                    check = true;
+                }
+            }
+
+            if (check == false)
             {
                 throw new IsuException("Invalid name of group");
             }
 
-            if (name[1] != '3')
-            {
-                throw new IsuException("Invalid name of group");
-            }
-
-            Group group = new Group(name);
+            var group = new Group(name);
             _groups.Add(group);
             return group;
         }
 
         public Student AddStudent(Group group, string name)
         {
-            if (group.Students.Count < maxAmountStudents)
-            {
-                Student student = new Student(name);
-                group.Students.Add(student);
+                Student student = new Student(name, group);
+                if (student.Group.Size > _maxAmountStudents)
+                {
+                    throw new IsuException("No place in group");
+                }
+
                 _allstudents.Add(student);
+                group.Size++;
                 return student;
-            }
-            else
-            {
-                throw new IsuException("No place to add student");
-            }
         }
 
         public Student GetStudent(int id)
@@ -72,11 +76,12 @@ namespace Isu.Service
 
         public List<Student> FindStudents(string groupName)
         {
-            foreach (Group group in _groups)
+            List<Student> studentsGroup = new List<Student>();
+            foreach (Student student in _allstudents)
             {
-                if (group.Name.Name == groupName)
+                if (student.Group.Name.Name == groupName)
                 {
-                    return group.Students;
+                    studentsGroup.Add(student);
                 }
             }
 
@@ -86,14 +91,11 @@ namespace Isu.Service
         public List<Student> FindStudents(CourseNumber courseNumber)
         {
             List<Student> studentsCourse = new List<Student>();
-            foreach (Group group in _groups)
+            foreach (Student student in _allstudents)
             {
-                if (group.Name.Course == courseNumber)
+                if (student.Group.Name.Course == courseNumber)
                 {
-                    foreach (Student student in group.Students)
-                    {
                         studentsCourse.Add(student);
-                    }
                 }
             }
 
@@ -129,23 +131,19 @@ namespace Isu.Service
 
         public void ChangeStudentGroup(Student student, Group newGroup)
         {
-            foreach (Group group in _groups)
+            foreach (Student item in _allstudents)
             {
-                foreach (Student item in group.Students)
-                {
                     if (student.Id == item.Id)
                     {
-                        if (newGroup.Students.Count < maxAmountStudents)
+                        if (newGroup.Size < _maxAmountStudents)
                         {
-                            newGroup.Students.Add(student);
-                            group.Students.Remove(student);
+                            student.Group = newGroup;
                         }
                         else
                         {
                             throw new IsuException("No place to add student");
                         }
                     }
-                }
             }
         }
     }

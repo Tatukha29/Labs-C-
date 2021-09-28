@@ -7,10 +7,10 @@ namespace Isu.Classes
         public Group(string name)
         {
             Name = new GroupName(name);
-            Students = new List<Student>();
+            Size = 0;
         }
 
-        public List<Student> Students { get; }
         public GroupName Name { get; }
+        public int Size { get; set; }
     }
 }
