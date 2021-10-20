@@ -11,14 +11,19 @@ namespace Isu.Classes
         private List<string> _faculty = new List<string>() { "M3", "L3" };
         public GroupName(string name)
         {
+            bool check = false;
             foreach (string faculty in _faculty.Where(faculty => name.Substring(0, 2) == faculty && name.Length == 5 && !string.IsNullOrEmpty(name)))
             {
                 Name = name;
                 Course = (CourseNumber)int.Parse(name.Substring(2, 1));
                 Group = int.Parse(name.Substring(3, 2));
+                check = true;
             }
 
-            throw new IsuException("Invalid group name");
+            if (check == false)
+            {
+                throw new IsuException("Invalid group name");
+            }
         }
 
         public string Name { get; }
