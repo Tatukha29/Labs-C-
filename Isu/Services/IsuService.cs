@@ -17,9 +17,9 @@ namespace Isu.Service
         {
             bool check = false;
             string n = name.Substring(0, 2);
-            foreach (var faculty in _faculties)
+            if (name.Length >= 5 && name.Length <= 6)
             {
-                if (faculty == n)
+                foreach (string faculty in _faculties.Where(faculty => faculty == n))
                 {
                     check = true;
                 }
@@ -37,25 +37,22 @@ namespace Isu.Service
 
         public Student AddStudent(Group group, string name)
         {
-                Student student = new Student(name, group);
-                if (student.Group.Size > _maxAmountStudents)
-                {
-                    throw new IsuException("No place in group");
-                }
+            var student = new Student(name, group);
+            if (group.Size > _maxAmountStudents)
+            {
+                throw new IsuException("No place in group");
+            }
 
-                _allstudents.Add(student);
-                group.Size++;
-                return student;
+            _allstudents.Add(student);
+            group.Size++;
+            return student;
         }
 
         public Student GetStudent(int id)
         {
-            foreach (Student student in _allstudents)
+            foreach (Student student in _allstudents.Where(student => student.Id == id))
             {
-                if (student.Id == id)
-                {
-                    return student;
-                }
+                return student;
             }
 
             throw new IsuException("Student not found");
@@ -63,87 +60,41 @@ namespace Isu.Service
 
         public Student FindStudent(string name)
         {
-            foreach (Student student in _allstudents)
-            {
-                if (student.Name == name)
-                {
-                    return student;
-                }
-            }
-
-            return null;
+            return _allstudents.FirstOrDefault(student => student.Name == name);
         }
 
         public List<Student> FindStudents(string groupName)
         {
-            List<Student> studentsGroup = new List<Student>();
-            foreach (Student student in _allstudents)
-            {
-                if (student.Group.Name.Name == groupName)
-                {
-                    studentsGroup.Add(student);
-                }
-            }
+            List<Student> studentsGroup = _allstudents.Where(student => student.Group.Name.Name == groupName).ToList();
 
             return null;
         }
 
         public List<Student> FindStudents(CourseNumber courseNumber)
         {
-            List<Student> studentsCourse = new List<Student>();
-            foreach (Student student in _allstudents)
-            {
-                if (student.Group.Name.Course == courseNumber)
-                {
-                        studentsCourse.Add(student);
-                }
-            }
-
-            return studentsCourse;
+            return _allstudents.Where(student => student.Group.Name.Course == courseNumber).ToList();
         }
 
         public Group FindGroup(string groupName)
         {
-            foreach (Group group in _groups)
-            {
-                if (group.Name.Name == groupName)
-                {
-                    return group;
-                }
-            }
-
-            return null;
+            return _groups.FirstOrDefault(@group => @group.Name.Name == groupName);
         }
 
         public List<Group> FindGroups(CourseNumber courseNumber)
         {
-            List<Group> groupCourse = new List<Group>();
-            foreach (Group group in _groups)
-            {
-                if (group.Name.Course == courseNumber)
-                {
-                    groupCourse.Add(group);
-                }
-            }
-
-            return groupCourse;
+            return _groups.Where(@group => @group.Name.Course == courseNumber).ToList();
         }
 
         public void ChangeStudentGroup(Student student, Group newGroup)
         {
-            foreach (Student item in _allstudents)
+            Student stud = GetStudent(student.Id);
+            if (newGroup.Size < _maxAmountStudents)
             {
-                    if (student.Id == item.Id)
-                    {
-                        if (newGroup.Size < _maxAmountStudents)
-                        {
-                            student.Group = newGroup;
-                        }
-                        else
-                        {
-                            throw new IsuException("No place to add student");
-                        }
-                    }
+                stud.Group = newGroup;
+            }
+            else
+            {
+                throw new IsuException("No place to add student");
             }
         }
     }

@@ -20,7 +20,7 @@ namespace Isu.Tests
         [Test]
         public void AddStudentToGroup_StudentHasGroupAndGroupContainsStudent()
         {
-            Group group = _isuService.AddGroup("L3208");
+            Group group = _isuService.AddGroup("M3208");
             Student student = _isuService.AddStudent(group,"Tanya");
             Assert.AreEqual(group, student.Group);
         }
@@ -42,8 +42,7 @@ namespace Isu.Tests
         {
             Assert.Catch<IsuException>(() =>
             {
-                Group group = _isuService.AddGroup("!3333");
-                Group group2 = _isuService.AddGroup("M7302");
+                Group group = _isuService.AddGroup("M333333");
             });
         }
 
