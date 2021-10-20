@@ -42,23 +42,22 @@ namespace Isu.Tests
         {
             Assert.Catch<IsuException>(() =>
             {
-                Group group = _isuService.AddGroup("M333333");
+                Group group = _isuService.AddGroup("M36010");
             });
         }
 
         [Test]
         public void TransferStudentToAnotherGroup_GroupChanged()
         {
+            Group group = _isuService.AddGroup("M3208");
+            Student student = _isuService.AddStudent(group, "Masha");
+            Group group2 = _isuService.AddGroup("M3200");
+            for (int i = 1; i <= 24; i++)
+            {
+                _isuService.AddStudent(group2, "Tanya");
+            }
             Assert.Catch<IsuException>(() =>
             {
-                Group group = _isuService.AddGroup("M3208");
-                Student student = _isuService.AddStudent(group, "Masha");
-                Group group2 = _isuService.AddGroup("M3200");
-                for (int i = 0; i <= 24; ++i)
-                {
-                    _isuService.AddStudent(group, "Tanya");
-                }
-
                 _isuService.ChangeStudentGroup(student, group2);
             });
         }

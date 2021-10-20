@@ -11,38 +11,22 @@ namespace Isu.Service
         private List<Group> _groups = new List<Group>();
         private List<Student> _allstudents = new List<Student>();
         private int _maxAmountStudents = 24;
-        private List<string> _faculties = new List<string>() { "M3", "L3" };
 
         public Group AddGroup(string name)
         {
-            bool check = false;
-            string n = name.Substring(0, 2);
-            if (name.Length >= 5 && name.Length <= 6)
-            {
-                foreach (string faculty in _faculties.Where(faculty => faculty == n))
-                {
-                    check = true;
-                }
-            }
-
-            if (check == false)
-            {
-                throw new IsuException("Invalid name of group");
-            }
-
-            var group = new Group(name);
+            Group group = new Group(name);
             _groups.Add(group);
             return group;
         }
 
         public Student AddStudent(Group group, string name)
         {
-            var student = new Student(name, group);
-            if (group.Size > _maxAmountStudents)
+            if (group.Size >= _maxAmountStudents)
             {
-                throw new IsuException("No place in group");
+                throw new IsuException("No place");
             }
 
+            var student = new Student(name, group);
             _allstudents.Add(student);
             group.Size++;
             return student;
@@ -66,7 +50,6 @@ namespace Isu.Service
         public List<Student> FindStudents(string groupName)
         {
             List<Student> studentsGroup = _allstudents.Where(student => student.Group.Name.Name == groupName).ToList();
-
             return null;
         }
 
@@ -87,15 +70,14 @@ namespace Isu.Service
 
         public void ChangeStudentGroup(Student student, Group newGroup)
         {
-            Student stud = GetStudent(student.Id);
-            if (newGroup.Size < _maxAmountStudents)
-            {
-                stud.Group = newGroup;
-            }
-            else
+            if (newGroup.Size >= _maxAmountStudents)
             {
                 throw new IsuException("No place to add student");
             }
+
+            student.Group.Size -= 1;
+            student.Group = newGroup;
+            student.Group.Size += 1;
         }
     }
 }
