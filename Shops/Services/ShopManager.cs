@@ -8,8 +8,8 @@ namespace Shops.Services
 {
     public class ShopManager
     {
-        private List<Product> _allproducts = new List<Product>();
-        private List<Shop> _shops = new List<Shop>();
+        private List<Product> _allproducts = new ();
+        private List<Shop> _shops = new ();
 
         public Shop AddShop(string name, string address)
         {
@@ -28,7 +28,8 @@ namespace Shops.Services
 
         public Product AddProduct(Product product, Shop shop, int price, int count)
         {
-            foreach (Product shopprod in _allproducts.Where(products => products.Id == product.Id).SelectMany(products => shop.Products.Where(shopprod => product == shopprod)))
+            foreach (Product shopprod in _allproducts.Where(products => products.Id == product.Id)
+                .SelectMany(products => shop.Products.Where(shopprod => product == shopprod)))
             {
                 shopprod.Count += count;
                 return shopprod;
@@ -49,20 +50,29 @@ namespace Shops.Services
             }
         }
 
-        public Shop FindMinProduct(string productName, int count)
+        public Shop FindMinProduct(string productName)
         {
-            int min = int.MaxValue;
-            foreach (Shop shop in from shop in _shops from prod in shop.Products where productName == prod.Name && min >= prod.Price && prod.Count >= count select shop)
+            int minCost = int.MaxValue;
+            Shop shop = null;
+            foreach (Shop shops in _shops)
             {
-                return shop;
+                foreach (Product products in shops.Products)
+                {
+                    if (products.Name == productName && products.Price < minCost)
+                    {
+                        minCost = products.Price;
+                        shop = shops;
+                    }
+                }
             }
 
-            throw new ShopException("Invalid min product");
+            return shop;
         }
 
         public Shop BuyProduct(Person person, Shop shop, string productName, int count)
         {
-            foreach (Product product in shop.Products.Where(product => product.Name == productName && person.Money >= product.Price * count))
+            foreach (Product product in shop.Products.Where(product =>
+                product.Name == productName && person.Money >= product.Price * count))
             {
                 person.Money -= product.Price * count;
                 product.Count -= count;
@@ -72,17 +82,23 @@ namespace Shops.Services
             throw new ShopException("No money or no product");
         }
 
-        public Shop DeliveryProduct(Person person, string productName, int count)
+        public void DeliveryProduct(Person person, string productName, int count)
         {
-            Shop shop = FindMinProduct(productName, count);
-            foreach (Product newProd in shop.Products.Where(newProd => newProd.Name == productName && person.Money >= newProd.Price * count))
+            foreach (var shops in _shops)
             {
-                newProd.Count -= count;
-                person.Money -= newProd.Price * count;
-                return shop;
+                foreach (var products in shops.Products)
+                {
+                    if (products.Count >= count && person.Money >= products.Count * products.Price)
+                    {
+                        products.Count -= count;
+                        person.Money -= count * products.Price;
+                    }
+                    else
+                    {
+                        throw new ShopException("Something went wrong");
+                    }
+                }
             }
-
-            throw new ShopException("Invalid delivery");
         }
     }
 }

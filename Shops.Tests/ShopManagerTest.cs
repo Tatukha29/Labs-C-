@@ -24,10 +24,9 @@ namespace Shops.Tests
             Assert.Contains(product2, shop.Products);
         }
 
-        [Test]
-        public void ChangeProductPrice()
+        [TestCase(50)]
+        public void ChangeProductPrice(int newPrice)
         {
-            int newPrice = 50;
             Shop shop = _shopManager.AddShop("Diksi", "Lenina 13");
             Product product = _shopManager.RegisterProduct("banana");
             Product product2 = _shopManager.AddProduct(product, shop, 30, 5);
@@ -36,28 +35,23 @@ namespace Shops.Tests
         }
 
         [Test]
-        public void FindMinProduct_ThrowExeption()
+        public void FindMinProduct()
         {
             Shop shop = _shopManager.AddShop("Diksi", "Lenina 13");
             Shop shop2 = _shopManager.AddShop("Perekrestok", "Lenina 13");
             Product prod = _shopManager.RegisterProduct("banana");
-            Product product = _shopManager.AddProduct(prod, shop, 50, 5);
-            Product product2 = _shopManager.AddProduct(prod, shop2, 50, 5);
-            Assert.Catch<ShopException>(() =>
-            {
-                _shopManager.FindMinProduct("banana", 6);
-            });
+            _shopManager.AddProduct(prod, shop, 50, 5);
+            _shopManager.AddProduct(prod, shop2, 30, 5);
+            Assert.AreEqual(_shopManager.FindMinProduct(prod.Name), shop2);
         }
 
         [Test]
-        public void BuyMinPriceProduct_ThrowExeption()
+        public void BuyProductShop_ThrowException()
         {
-            Person person = new Person("Alan", 1000);
+            var person = new Person("Alan", 1000);
             Shop shop = _shopManager.AddShop("Diksi", "Lenina 13");
-            Shop shop2 = _shopManager.AddShop("Perekrestok", "Lenina 13");
             Product prod = _shopManager.RegisterProduct("banana");
-            Product product = _shopManager.AddProduct(prod, shop, 20, 5);
-            Product product2 = _shopManager.AddProduct(prod, shop2, 10, 5);
+            _shopManager.AddProduct(prod, shop, 20, 5);
             Assert.Catch<ShopException>(() =>
             {
                 _shopManager.DeliveryProduct(person, "banana", 6);
