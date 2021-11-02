@@ -44,28 +44,55 @@ namespace Isu.Service
 
         public Student FindStudent(string name)
         {
-            return _allstudents.FirstOrDefault(student => student.Name == name);
+            foreach (var student in _allstudents.Where(student => student.Name == name))
+            {
+                return student;
+            }
+
+            return null;
         }
 
         public List<Student> FindStudents(string groupName)
         {
-            List<Student> studentsGroup = _allstudents.Where(student => student.Group.Name.Name == groupName).ToList();
+            List<Student> studentsGroup = new List<Student>();
+            foreach (var student in _allstudents.Where(student => student.Group.Name.Name == groupName))
+            {
+                studentsGroup.Add(student);
+            }
+
             return null;
         }
 
         public List<Student> FindStudents(CourseNumber courseNumber)
         {
-            return _allstudents.Where(student => student.Group.Name.Course == courseNumber).ToList();
+            List<Student> studentsCourse = new List<Student>();
+            foreach (var student in _allstudents.Where(student => student.Group.Name.Course == courseNumber))
+            {
+                studentsCourse.Add(student);
+            }
+
+            return studentsCourse;
         }
 
         public Group FindGroup(string groupName)
         {
-            return _groups.FirstOrDefault(@group => @group.Name.Name == groupName);
+            foreach (Group group in _groups.Where(group => group.Name.Name == groupName))
+            {
+                return group;
+            }
+
+            return null;
         }
 
         public List<Group> FindGroups(CourseNumber courseNumber)
         {
-            return _groups.Where(@group => @group.Name.Course == courseNumber).ToList();
+            List<Group> groupCourse = new List<Group>();
+            foreach (Group group in _groups.Where(group => group.Name.Course == courseNumber))
+            {
+                groupCourse.Add(group);
+            }
+
+            return groupCourse;
         }
 
         public void ChangeStudentGroup(Student student, Group newGroup)
