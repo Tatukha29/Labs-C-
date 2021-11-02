@@ -28,11 +28,19 @@ namespace Shops.Services
 
         public Product AddProduct(Product product, Shop shop, int price, int count)
         {
-            foreach (Product shopprod in _allproducts.Where(products => products.Id == product.Id)
-                .SelectMany(products => shop.Products.Where(shopprod => product == shopprod)))
+            foreach (var shopprod in _allproducts)
             {
-                shopprod.Count += count;
-                return shopprod;
+                if (shopprod.Id == product.Id)
+                {
+                    foreach (var prod in shop.Products)
+                    {
+                        if (prod == product)
+                        {
+                            prod.Count += count;
+                            return prod;
+                        }
+                    }
+                }
             }
 
             Product newProduct = new Product(product.Name);
@@ -44,39 +52,44 @@ namespace Shops.Services
 
         public void ChangeProductPrice(Shop shop, Product product, int price)
         {
-            foreach (Product prod in shop.Products.Where(prod => prod.Id == product.Id))
+            foreach (var prod in shop.Products)
             {
-                prod.Price = price;
+                if (prod.Id == product.Id)
+                {
+                    prod.Price = price;
+                }
             }
         }
 
-        public Shop FindMinProduct(string productName)
+        public Shop FindMinProductPrice(string productName)
         {
             int minCost = int.MaxValue;
-            Shop shop = null;
-            foreach (Shop shops in _shops)
+            Shop shopMinPrice = null;
+            foreach (Shop shop in _shops)
             {
-                foreach (Product products in shops.Products)
+                foreach (Product products in shop.Products)
                 {
                     if (products.Name == productName && products.Price < minCost)
                     {
                         minCost = products.Price;
-                        shop = shops;
+                        shopMinPrice = shop;
                     }
                 }
             }
 
-            return shop;
+            return shopMinPrice;
         }
 
         public Shop BuyProduct(Person person, Shop shop, string productName, int count)
         {
-            foreach (Product product in shop.Products.Where(product =>
-                product.Name == productName && person.Money >= product.Price * count))
+            foreach (Product product in shop.Products)
             {
-                person.Money -= product.Price * count;
-                product.Count -= count;
-                return shop;
+                if (product.Name == productName && person.Money >= product.Price * count)
+                {
+                    person.Money -= product.Price * count;
+                    product.Count -= count;
+                    return shop;
+                }
             }
 
             throw new ShopException("No money or no product");
@@ -84,9 +97,9 @@ namespace Shops.Services
 
         public void DeliveryProduct(Person person, string productName, int count)
         {
-            foreach (var shops in _shops)
+            foreach (Shop shops in _shops)
             {
-                foreach (var products in shops.Products)
+                foreach (Product products in shops.Products)
                 {
                     if (products.Count >= count && person.Money >= products.Count * products.Price)
                     {

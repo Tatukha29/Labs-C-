@@ -35,14 +35,14 @@ namespace Shops.Tests
         }
 
         [Test]
-        public void FindMinProduct()
+        public void FindMinProductPrice()
         {
             Shop shop = _shopManager.AddShop("Diksi", "Lenina 13");
             Shop shop2 = _shopManager.AddShop("Perekrestok", "Lenina 13");
             Product prod = _shopManager.RegisterProduct("banana");
-            _shopManager.AddProduct(prod, shop, 50, 5);
-            _shopManager.AddProduct(prod, shop2, 30, 5);
-            Assert.AreEqual(_shopManager.FindMinProduct(prod.Name), shop2);
+            Product product1 = _shopManager.AddProduct(prod, shop, 100, 5);
+            Product product2 = _shopManager.AddProduct(prod, shop2, 30, 6);
+            Assert.AreEqual(_shopManager.FindMinProductPrice(prod.Name), shop2);
         }
 
         [Test]
