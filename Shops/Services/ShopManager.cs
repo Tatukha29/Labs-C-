@@ -18,33 +18,29 @@ namespace Shops.Services
             return shop;
         }
 
-        public Product RegisterProduct(string name)
+        public Product RegisterProduct(string name, int count)
         {
-            var product = new Product(name);
-            product.Count = int.MaxValue;
+            var product = new Product(name, count);
+            product.Count = count;
             _allproducts.Add(product);
             return product;
         }
 
         public Product AddProduct(Product product, Shop shop, int price, int count)
         {
-            foreach (var shopprod in _allproducts)
+            if (!_allproducts.Contains(product))
             {
-                if (shopprod.Id == product.Id)
-                {
-                    foreach (var prod in shop.Products)
-                    {
-                        if (prod == product)
-                        {
-                            prod.Count += count;
-                            return prod;
-                        }
-                    }
-                }
+                throw new ShopException("No product");
             }
 
-            Product newProduct = new Product(product.Name);
-            newProduct.Count += count;
+            if (shop.Products.Contains(product))
+            {
+                Product prod = shop.Products.Find(prod => prod.Equals(product));
+                prod.Count += count;
+                return prod;
+            }
+
+            Product newProduct = new Product(product.Name, count);
             newProduct.Price = price;
             shop.Products.Add(newProduct);
             return newProduct;
@@ -52,66 +48,59 @@ namespace Shops.Services
 
         public void ChangeProductPrice(Shop shop, Product product, int price)
         {
-            foreach (var prod in shop.Products)
+            foreach (Product prod in shop.Products.Where(prod => prod.Id == product.Id))
             {
-                if (prod.Id == product.Id)
-                {
-                    prod.Price = price;
-                }
+                prod.Price = price;
             }
         }
 
-        public Shop FindMinProductPrice(string productName)
+        public Shop FindMinProductPrice(string productName, int count)
         {
             int minCost = int.MaxValue;
             Shop shopMinPrice = null;
             foreach (Shop shop in _shops)
             {
-                foreach (Product products in shop.Products)
+                foreach (Product products in shop.Products.Where(products => products.Name == productName && products.Price < minCost && products.Count >= count))
                 {
-                    if (products.Name == productName && products.Price < minCost)
-                    {
-                        minCost = products.Price;
-                        shopMinPrice = shop;
-                    }
+                    minCost = products.Price;
+                    shopMinPrice = shop;
                 }
+            }
+
+            if (minCost == int.MaxValue && shopMinPrice == null)
+            {
+                throw new ShopException("Invalid");
             }
 
             return shopMinPrice;
         }
 
-        public Shop BuyProduct(Person person, Shop shop, string productName, int count)
+        public void BuyProduct(Person person, Shop shop, string productName, int count)
         {
-            foreach (Product product in shop.Products)
+            foreach (Product product in shop.Products.Where(product => product.Name == productName && person.GetMoney() >= product.Price * count))
             {
-                if (product.Name == productName && person.Money >= product.Price * count)
-                {
-                    person.Money -= product.Price * count;
-                    product.Count -= count;
-                    return shop;
-                }
+                person.CountMoney(product.Price * count);
+                product.Count -= count;
             }
 
             throw new ShopException("No money or no product");
         }
 
-        public void DeliveryProduct(Person person, string productName, int count)
+        public void BuyListProducts(List<Product> basket, Shop shop, Person person)
         {
-            foreach (Shop shops in _shops)
+            foreach (Product product in basket)
             {
-                foreach (Product products in shops.Products)
+                foreach (Product prod in shop.Products.Where(prod => prod.Name == product.Name))
                 {
-                    if (products.Count >= count && person.Money >= products.Count * products.Price)
-                    {
-                        products.Count -= count;
-                        person.Money -= count * products.Price;
-                    }
-                    else
-                    {
-                        throw new ShopException("Something went wrong");
-                    }
+                    BuyProduct(person, shop, product.Name, product.Count);
                 }
             }
+        }
+
+        public void DeliveryProduct(Person person, string productName, int count)
+        {
+            Shop shop = FindMinProductPrice(productName, count);
+            BuyProduct(person, shop, productName, count);
         }
     }
 }

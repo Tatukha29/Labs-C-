@@ -2,13 +2,24 @@
 {
     public class Person
     {
+        private static int _money;
+
         public Person(string name, int money)
         {
             Name = name;
-            Money = money;
+            _money = money;
         }
 
         public string Name { get; }
-        public int Money { get; set; }
+
+        public int GetMoney()
+        {
+            return _money;
+        }
+
+        public int CountMoney(int check)
+        {
+            return _money = GetMoney() - check;
+        }
     }
 }

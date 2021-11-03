@@ -4,10 +4,11 @@ namespace Shops.Classes
 {
     public class Product
     {
-        public Product(string name)
+        public Product(string name, int count)
         {
             Id = new GenericId().Id;
             Name = name.ToLower();
+            Count = count;
         }
 
         public int Id { get; }
