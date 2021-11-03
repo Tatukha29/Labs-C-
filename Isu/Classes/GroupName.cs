@@ -12,7 +12,7 @@ namespace Isu.Classes
         public GroupName(string name)
         {
             bool check = false;
-            foreach (string faculty in _faculty.Where(faculty => name.Substring(0, 2) == faculty && name.Length == 5 && !string.IsNullOrEmpty(name)))
+            if (_faculty.Contains(name.Substring(0, 2)) && name.Length == 5 && !string.IsNullOrEmpty(name))
             {
                 Name = name;
                 Course = (CourseNumber)int.Parse(name.Substring(2, 1));
