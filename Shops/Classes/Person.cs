@@ -2,7 +2,7 @@
 {
     public class Person
     {
-        private static int _money;
+        private int _money;
 
         public Person(string name, int money)
         {
@@ -17,9 +17,9 @@
             return _money;
         }
 
-        public int CountMoney(int check)
+        public void CountMoney(int check)
         {
-            return _money = GetMoney() - check;
+            _money = GetMoney() - check;
         }
     }
 }

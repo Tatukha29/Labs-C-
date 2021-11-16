@@ -8,7 +8,7 @@ namespace Shops.Tests
 {
     public class ShopManagerTest
     {
-        private ShopManager _shopManager;
+        private IShopManager _shopManager;
 
         [SetUp]
         public void Setup()
@@ -36,14 +36,14 @@ namespace Shops.Tests
         }
 
         [Test]
-        public void FindMinProductPrice()
+        public void FindMinPriceShopProduct()
         {
             Shop shop = _shopManager.AddShop("Diksi", "Lenina 13");
             Shop shop2 = _shopManager.AddShop("Perekrestok", "Lenina 13");
             Product prod = _shopManager.RegisterProduct("banana", 100);
             Product product1 = _shopManager.AddProduct(prod, shop, 100, 5);
             Product product2 = _shopManager.AddProduct(prod, shop2, 30, 6);
-            Assert.AreEqual(_shopManager.FindMinProductPrice(prod.Name, 2), shop2);
+            Assert.AreEqual(_shopManager.MinPriceShopProduct(prod, 2), shop2);
         }
 
         [TestCase(2)]
@@ -55,7 +55,7 @@ namespace Shops.Tests
             _shopManager.AddProduct(prod, shop, 20, 5);
             Assert.Catch<ShopException>(() =>
             {
-                _shopManager.DeliveryProduct(person, "banana", 6);
+                _shopManager.DeliveryProduct(person, prod, 6);
             });
         }
 
