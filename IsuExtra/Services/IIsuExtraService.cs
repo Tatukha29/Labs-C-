@@ -7,15 +7,14 @@ namespace IsuExtra.Services
 {
     public interface IIsuExtraService
     {
-        Ognp AddOgnp(string name, string megafaculty);
+        Ognp AddOgnp(string name);
         OgnpCourse AddCourse(string name, Ognp ognp);
-        Lesson AddLesson(OgnpCourse ognpCourse, string lessonName, string time, int size, int day);
-        ScheduleGroup AddScheduleGroup(Group mainGroup, string time, int day);
+        OgnpGroup AddOgnpGroup(OgnpCourse ognpCourse, string groupName, DateTime time, string teacher, int room);
+        ScheduleGroup AddScheduleGroup(Group mainGroup, DateTime time, string teacher, int room);
         Student AddStudentOgnp(Student student, Ognp ognpName);
         void RemoveStudentOgnp(Student student, string ognpName);
         OgnpCourse GetOgnpCourse(OgnpCourse ognpCourse);
-        Lesson GetOgnpGroup(Lesson lesson);
-        Student FindStudentOgnp(Student student);
+        OgnpGroup GetOgnpGroup(OgnpGroup ognpGroup);
         List<Student> StudentsWithoutOgnpGroup(List<Student> result);
     }
 }

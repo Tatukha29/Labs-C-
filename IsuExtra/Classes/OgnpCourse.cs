@@ -7,10 +7,10 @@ namespace IsuExtra.Classes
         public OgnpCourse(string name)
         {
             Name = name;
-            Lessons = new List<Lesson>();
+            OgnpGroups = new List<OgnpGroup>();
         }
 
         public string Name { get; }
-        public List<Lesson> Lessons { get; }
+        public List<OgnpGroup> OgnpGroups { get; }
     }
 }

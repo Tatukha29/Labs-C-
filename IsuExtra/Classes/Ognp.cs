@@ -4,11 +4,11 @@ namespace IsuExtra.Classes
 {
     public class Ognp
     {
-        public Ognp(string name, string megafaculty)
+        public Ognp(string name)
         {
             Id = new OgnpId().Id;
-            Name = name;
-            Megafaculty = megafaculty;
+            Name = name.Substring(0, 3);
+            Megafaculty = name.Substring(3, 2);
             Courses = new List<OgnpCourse>();
         }
 

@@ -11,13 +11,15 @@ namespace IsuExtra.Services
 {
     public class OgnpService : IIsuExtraService
     {
-        private IsuService _isuService = new IsuService();
         private List<Ognp> _ognps = new List<Ognp>();
         private List<ScheduleGroup> _scheduleGroups = new List<ScheduleGroup>();
         private List<Student> _allOgnpStudents = new List<Student>();
+        private int _countCourses = 2;
+        private int _maxCountStudent = 25;
 
-        public Ognp AddOgnp(string name, string megafaculty)
+        public Ognp AddOgnp(string name)
         {
+            string megafaculty = name.Substring(3, 2);
             bool check = false;
             foreach (var checkognp in _ognps.Where(checkognp => checkognp.Megafaculty == megafaculty))
             {
@@ -29,28 +31,28 @@ namespace IsuExtra.Services
                 throw new IsuExtraException("Ognp already exists");
             }
 
-            var ognp = new Ognp(name, megafaculty);
+            var ognp = new Ognp(name);
             _ognps.Add(ognp);
             return ognp;
         }
 
         public OgnpCourse AddCourse(string name, Ognp ognp)
         {
-            if (ognp.Courses.Count >= 2) throw new IsuExtraException("Too many courses");
+            if (ognp.Courses.Count >= _countCourses) throw new IsuExtraException("Too many courses");
             var ognpCourse = new OgnpCourse(name);
             ognp.Courses.Add(ognpCourse);
             return ognpCourse;
         }
 
-        public Lesson AddLesson(OgnpCourse ognpCourse, string lessonName, string time, int size, int day)
+        public OgnpGroup AddOgnpGroup(OgnpCourse ognpCourse, string groupName, DateTime time, string teacher, int room)
         {
             foreach (Ognp ognp in _ognps)
             {
                 foreach (OgnpCourse course in ognp.Courses)
                 {
                     if (course != ognpCourse) continue;
-                    var lesson = new Lesson(lessonName, time, day, size);
-                    course.Lessons.Add(lesson);
+                    var lesson = new OgnpGroup(groupName, time, teacher, room);
+                    course.OgnpGroups.Add(lesson);
                     return lesson;
                 }
             }
@@ -58,21 +60,22 @@ namespace IsuExtra.Services
             throw new IsuExtraException("Something went wrong");
         }
 
-        public ScheduleGroup AddScheduleGroup(Group mainGroup, string time, int day)
+        public ScheduleGroup AddScheduleGroup(Group mainGroup, DateTime time, string teacher, int room)
         {
-            if (_scheduleGroups.Where(schedule => schedule.Group == mainGroup).Any(schedule => schedule.Time == time && schedule.Day == day))
+            if (_scheduleGroups.Where(schedule => schedule.Group == mainGroup).Any(schedule => schedule.Time == time))
             {
                 throw new IsuExtraException("Issues with time");
             }
 
-            var scheduleGroup = new ScheduleGroup(mainGroup, time, day);
+            var scheduleGroup = new ScheduleGroup(mainGroup, time, teacher, room);
             _scheduleGroups.Add(scheduleGroup);
             return scheduleGroup;
         }
 
         public Student AddStudentOgnp(Student student, Ognp ognpName)
         {
-            if (_ognps.Where(ognp => ognp == ognpName).Any(ognp => ognp.Megafaculty == student.Group.Name.Name.Substring(0, 2)))
+            string megafaculty = student.Group.Name.Name.Substring(0, 2);
+            if (_ognps.Where(ognp => ognp == ognpName).Any(ognp => ognp.Megafaculty == megafaculty))
             {
                 throw new IsuExtraException("one megafaculty");
             }
@@ -83,17 +86,16 @@ namespace IsuExtra.Services
                 if (scheduleGroup.Group != student.Group) continue;
                 foreach (var course in _ognps.Where(ognp => ognp == ognpName).SelectMany(ognp => ognp.Courses))
                 {
-                    foreach (var lesson in course.Lessons)
+                    foreach (var ognpGroup in course.OgnpGroups)
                     {
-                        if ((lesson.Time != scheduleGroup.Time || lesson.Day != scheduleGroup.Day) && lesson.Size > 0)
+                        if ((ognpGroup.Time != scheduleGroup.Time) && ognpGroup.StudentsOgnp.Count < _maxCountStudent)
                         {
-                            lesson.Size -= 1;
-                            lesson.StudentsOgnp.Add(student);
+                            ognpGroup.StudentsOgnp.Add(student);
                             check++;
                             break;
                         }
 
-                        if (lesson.Size == 0)
+                        if (ognpGroup.StudentsOgnp.Count == _maxCountStudent)
                         {
                             throw new IsuExtraException("No place");
                         }
@@ -108,11 +110,11 @@ namespace IsuExtra.Services
 
         public void RemoveStudentOgnp(Student student, string ognpName)
         {
-            foreach (Lesson lesson in from ognp in _ognps
+            foreach (OgnpGroup lesson in from ognp in _ognps
                 where ognp.Name == ognpName
                 from course in ognp.Courses
-                from lesson in course.Lessons
-                select lesson)
+                from ognpGroup in course.OgnpGroups
+                select ognpGroup)
             {
                 if (lesson.StudentsOgnp.Any(ognpStudent => ognpStudent.Name == student.Name))
                 {
@@ -126,24 +128,9 @@ namespace IsuExtra.Services
             return _ognps.SelectMany(ognp => ognp.Courses).FirstOrDefault(course => course == ognpCourse);
         }
 
-        public Lesson GetOgnpGroup(Lesson lesson)
+        public OgnpGroup GetOgnpGroup(OgnpGroup ognpGroup)
         {
-            return (from ognp in _ognps from course in ognp.Courses from lessons in course.Lessons select lessons).FirstOrDefault(lessons => lessons == lesson);
-        }
-
-        public Student FindStudentOgnp(Student student)
-        {
-            foreach (var students in from ognp in _ognps
-                from course in ognp.Courses
-                from lesson in course.Lessons
-                from students in lesson.StudentsOgnp
-                where students.Name == student.Name
-                select students)
-            {
-                return students;
-            }
-
-            throw new IsuExtraException("Something went wrong");
+            return (from ognp in _ognps from course in ognp.Courses from ognpGroups in course.OgnpGroups select ognpGroups).FirstOrDefault(ognpGroups => ognpGroups == ognpGroup);
         }
 
         public List<Student> StudentsWithoutOgnpGroup(List<Student> result)

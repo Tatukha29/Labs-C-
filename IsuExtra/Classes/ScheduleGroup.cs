@@ -5,15 +5,17 @@ namespace IsuExtra.Classes
 {
     public class ScheduleGroup
     {
-        public ScheduleGroup(Group group,  string time, int day)
+        public ScheduleGroup(Group group, DateTime time, string teacher, int room)
         {
             Group = group;
             Time = time;
-            Day = day;
+            Teacher = teacher;
+            Room = room;
         }
 
         public Group Group { get; }
-        public string Time { get; }
-        public int Day { get; }
+        public DateTime Time { get; }
+        public string Teacher { get; }
+        public int Room { get; }
     }
 }

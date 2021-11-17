@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using Isu.Classes;
 using Isu.Service;
@@ -26,17 +25,17 @@ namespace Isu.Tests
         [Test]
         public void OgnpAlreadyExists_ThrowException()
         {
-            Ognp ognp = _isuExtraService.AddOgnp("КИБ", "M3");
+            Ognp ognp = _isuExtraService.AddOgnp("КИБM3");
             Assert.Catch<Exception>(() =>
             {
-                _isuExtraService.AddOgnp("ФТН", "M3");
+                _isuExtraService.AddOgnp("ФТНM3");
             });
         }
 
         [Test]
         public void TooManyCourses_ThrowException()
         {
-            Ognp ognp = _isuExtraService.AddOgnp("КИБ", "M3");
+            Ognp ognp = _isuExtraService.AddOgnp("КИБM3");
             OgnpCourse courseFirst = _isuExtraService.AddCourse("PO", ognp);
             OgnpCourse courseSecond = _isuExtraService.AddCourse("Method", ognp);
             Assert.Catch<Exception>(() =>
@@ -50,12 +49,12 @@ namespace Isu.Tests
         {
             Group group = _isuService.AddGroup("M3208");
             Student student = _isuService.AddStudent(group, "Tanya");
-            _isuExtraService.AddScheduleGroup(group, "10:00", 1);
-            Ognp ognp = _isuExtraService.AddOgnp("Хуйня", "L3");
+            _isuExtraService.AddScheduleGroup(group, new DateTime(2021, 11, 29, 10, 00, 00), "Mayatin", 302);
+            Ognp ognp = _isuExtraService.AddOgnp("КИБL3");
             OgnpCourse ognpCourseFirst = _isuExtraService.AddCourse("Method", ognp);
             OgnpCourse ognpCourseSecond = _isuExtraService.AddCourse("Cyber", ognp);
-            _isuExtraService.AddLesson(ognpCourseFirst, "PO", "10:00", 20, 1);
-            _isuExtraService.AddLesson(ognpCourseSecond, "Cyber", "12:00", 20, 2);
+            _isuExtraService.AddOgnpGroup(ognpCourseFirst, "КИБ3.2", new DateTime(2021, 11, 29, 10, 00, 00), "Mayatin", 100);
+            _isuExtraService.AddOgnpGroup(ognpCourseSecond, "POM3.1", new DateTime(2021, 11, 29, 12, 00, 00), "Mayatin", 200);
             Assert.Catch<Exception>(() =>
             {
                 _isuExtraService.AddStudentOgnp(student, ognp);
@@ -67,12 +66,12 @@ namespace Isu.Tests
         {
             Group group = _isuService.AddGroup("M3208");
             Student student = _isuService.AddStudent(group, "Tanya");
-            _isuExtraService.AddScheduleGroup(group, "08:20", 1);
-            Ognp ognp = _isuExtraService.AddOgnp("Хуйня", "M3");
+            _isuExtraService.AddScheduleGroup(group, new DateTime(2021, 11, 29, 08, 20, 00), "Mayatin", 302);
+            Ognp ognp = _isuExtraService.AddOgnp("КИБM3");
             OgnpCourse ognpCourseFirst = _isuExtraService.AddCourse("Method", ognp);
             OgnpCourse ognpCourseSecond = _isuExtraService.AddCourse("Cyber", ognp);
-            _isuExtraService.AddLesson(ognpCourseFirst, "PO", "10:00", 20, 1);
-            _isuExtraService.AddLesson(ognpCourseSecond, "Cyber", "12:00", 20, 2);
+            _isuExtraService.AddOgnpGroup(ognpCourseFirst, "КИБ3.2", new DateTime(2021, 11, 29, 10, 00, 00), "Mayatin", 1);
+            _isuExtraService.AddOgnpGroup(ognpCourseSecond, "POM3.1", new DateTime(2021, 11, 29, 12, 00, 00), "Mayatin", 2);
             Assert.Catch<Exception>(() =>
             {
                 _isuExtraService.AddStudentOgnp(student, ognp);
@@ -85,12 +84,12 @@ namespace Isu.Tests
             Group group = _isuService.AddGroup("M3208");
             Student student = _isuService.AddStudent(group, "Tanya");
             Student student2 = _isuService.AddStudent(group, "Masha");
-            _isuExtraService.AddScheduleGroup(group, "08:20", 1);
-            Ognp ognp = _isuExtraService.AddOgnp("Хуйня", "L3");
+            _isuExtraService.AddScheduleGroup(group, new DateTime(2021, 11, 28, 10, 00, 00), "Mayatin", 302);
+            Ognp ognp = _isuExtraService.AddOgnp("КИБL3");
             OgnpCourse ognpCourseFirst = _isuExtraService.AddCourse("Method", ognp);
             OgnpCourse ognpCourseSecond = _isuExtraService.AddCourse("Cyber", ognp);
-            _isuExtraService.AddLesson(ognpCourseFirst, "PO", "10:00", 20, 1);
-            _isuExtraService.AddLesson(ognpCourseSecond, "Cyber", "12:00", 20, 2);
+            _isuExtraService.AddOgnpGroup(ognpCourseFirst, "КИБ3.2", new DateTime(2021, 11, 29, 10, 00, 00), "Mayatin", 1);
+            _isuExtraService.AddOgnpGroup(ognpCourseSecond, "POM3.1", new DateTime(2021, 11, 29, 12, 00, 00), "Mayatin", 2);
             _isuExtraService.AddStudentOgnp(student, ognp);
             List<Student> result = _isuService.FindStudents(group.Name.Name);
             Assert.AreEqual(_isuExtraService.StudentsWithoutOgnpGroup(result), new List<Student>() {student2});
