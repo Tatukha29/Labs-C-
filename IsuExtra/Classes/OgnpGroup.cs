@@ -11,15 +11,12 @@ namespace IsuExtra.Classes
         {
             if (name.Length == 6 && !string.IsNullOrEmpty(name) && name.Substring(4, 1) == "." && int.Parse(name.Substring(5, 1)) > 0 && int.Parse(name.Substring(5, 1)) < 6)
             {
-                Name = name;
-                Time = time;
-                Teacher = teacher;
-                Room = room;
+                Name = new LessonOgnp(name, time, teacher, room);
                 StudentsOgnp = new List<Student>();
             }
         }
 
-        public string Name { get; }
+        public LessonOgnp Name { get; }
         public DateTime Time { get; }
         public string Teacher { get; }
         public int Room { get; }

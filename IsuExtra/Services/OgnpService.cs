@@ -51,9 +51,9 @@ namespace IsuExtra.Services
                 foreach (OgnpCourse course in ognp.Courses)
                 {
                     if (course != ognpCourse) continue;
-                    var lesson = new OgnpGroup(groupName, time, teacher, room);
-                    course.OgnpGroups.Add(lesson);
-                    return lesson;
+                    var newOgnpGroup = new OgnpGroup(groupName, time, teacher, room);
+                    course.OgnpGroups.Add(newOgnpGroup);
+                    return newOgnpGroup;
                 }
             }
 
@@ -88,7 +88,7 @@ namespace IsuExtra.Services
                 {
                     foreach (var ognpGroup in course.OgnpGroups)
                     {
-                        if ((ognpGroup.Time != scheduleGroup.Time) && ognpGroup.StudentsOgnp.Count < _maxCountStudent)
+                        if ((ognpGroup.Name.Time != scheduleGroup.Time) && ognpGroup.StudentsOgnp.Count < _maxCountStudent)
                         {
                             ognpGroup.StudentsOgnp.Add(student);
                             check++;
