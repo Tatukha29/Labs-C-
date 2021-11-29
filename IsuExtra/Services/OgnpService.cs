@@ -80,6 +80,8 @@ namespace IsuExtra.Services
                 throw new IsuExtraException("one megafaculty");
             }
 
+            if (_allOgnpStudents.Any(students => students == student)) throw new IsuExtraException("you are already signed up");
+
             int check = 0;
             foreach (var scheduleGroup in _scheduleGroups)
             {
