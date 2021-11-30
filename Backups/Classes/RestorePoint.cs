@@ -9,11 +9,11 @@ namespace Backups.Classes
         {
             Id = Guid.NewGuid();
             Data = DateTime.Now;
-            Storage = new List<Storage>();
+            Storages = new List<Storage>();
         }
 
         public Guid Id { get; }
         public DateTime Data { get; }
-        public List<Storage> Storage { get; }
+        public List<Storage> Storages { get; }
     }
 }
