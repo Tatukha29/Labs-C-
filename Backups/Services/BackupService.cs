@@ -33,20 +33,14 @@ namespace Backups.Services
         {
             RestorePoint restorePoint = backupJob.CreateRestorePoint();
             List<Storage> storages = repository.MakeLocalBackUp(algorithm, backupJob.JobObjects, directory.Name, restorePoint);
-            foreach (Storage storage in storages)
-            {
-                restorePoint.Storage.Add(storage);
-            }
+            restorePoint.Storage.AddRange(storages);
         }
 
         public void StartVirtualBackup(IAlgorithm algorithm, List<JobObject> jobObjects, DirectoryInfo directory, BackupJob backupJob, Repository repository)
         {
             RestorePoint restorePoint = backupJob.CreateRestorePoint();
             List<Storage> storages = repository.MakeVirtualBackUp(algorithm, backupJob.JobObjects, directory.Name, restorePoint);
-            foreach (Storage storage in storages)
-            {
-                restorePoint.Storage.Add(storage);
-            }
+            restorePoint.Storage.AddRange(storages);
         }
     }
 }
