@@ -23,7 +23,7 @@ namespace Backups
                 backupJob.AddJobObject(jobObject);
             }
 
-            backupService.StartLocalBackup(algorithm: new Classes.Single(), jobObjects, directory, backupJob, repository);
+            backupService.StartBackup(new Classes.Local(), algorithm: new Classes.Single(), jobObjects, directory, backupJob, repository);
         }
     }
 }

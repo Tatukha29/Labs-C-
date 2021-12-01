@@ -15,8 +15,12 @@ namespace Backups.Classes
         }
 
         public DirectoryInfo Directory { get; }
+        public void BackUp(IRepository backup, IAlgorithm algorithm, List<JobObject> jobObjects, RestorePoint restorePoint)
+        {
+            List<Storage> storages = backup.MakeBackup(algorithm, jobObjects, restorePoint, Directory);
+        }
 
-        public List<Storage> MakeVirtualBackUp(IAlgorithm algorithm, List<JobObject> jobObjects, string nameDirectory, RestorePoint restorePoint)
+        /*public List<Storage> MakeVirtualBackUp(IAlgorithm algorithm, List<JobObject> jobObjects, string nameDirectory, RestorePoint restorePoint)
         {
             List<Storage> storages = algorithm.MakeStorages(jobObjects);
             string path;
@@ -52,6 +56,6 @@ namespace Backups.Classes
             }
 
             return storages;
-        }
+        }*/
     }
 }

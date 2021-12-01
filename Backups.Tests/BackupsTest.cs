@@ -31,13 +31,13 @@ namespace Backups.Tests
             {
                 backupJob.AddJobObject(jobObject);
             }
-            backupService.StartVirtualBackup(algorithm: new Split(), jobObjects, directory, backupJob, repository);
+            backupService.StartBackup(new Virtual(), algorithm: new Split(), backupJob.JobObjects, directory, backupJob, repository);
             backupJob.RemoveJobObject(jobObject1);
-            backupService.StartVirtualBackup(algorithm: new Split(), jobObjects, directory, backupJob, repository);
+            backupService.StartBackup(new Virtual(), algorithm: new Split(), backupJob.JobObjects, directory, backupJob, repository);
             var check = 0;
             foreach (var restorePoint in backupJob.RestorePoints)
             {
-                check += restorePoint.Storage.Count;
+                check += restorePoint.Storages.Count;
             }
             Assert.AreEqual(2, backupJob.RestorePoints.Count);
             Assert.AreEqual(3, check);

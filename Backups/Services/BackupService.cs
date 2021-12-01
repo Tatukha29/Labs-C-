@@ -29,18 +29,18 @@ namespace Backups.Services
             return repository;
         }
 
-        public void StartLocalBackup(IAlgorithm algorithm, List<JobObject> jobObjects, DirectoryInfo directory, BackupJob backupJob, Repository repository)
+        public void StartBackup(IRepository backup, IAlgorithm algorithm, List<JobObject> jobObjects, DirectoryInfo directory, BackupJob backupJob, Repository repository)
         {
             RestorePoint restorePoint = backupJob.CreateRestorePoint();
-            List<Storage> storages = repository.MakeLocalBackUp(algorithm, backupJob.JobObjects, directory.Name, restorePoint);
+            List<Storage> storages = backup.MakeBackup(algorithm, jobObjects, restorePoint, directory);
             restorePoint.Storages.AddRange(storages);
         }
 
-        public void StartVirtualBackup(IAlgorithm algorithm, List<JobObject> jobObjects, DirectoryInfo directory, BackupJob backupJob, Repository repository)
+        /*public void StartVirtualBackup(IRepository backup, IAlgorithm algorithm, List<JobObject> jobObjects, DirectoryInfo directory, BackupJob backupJob, Repository repository)
         {
             RestorePoint restorePoint = backupJob.CreateRestorePoint();
-            List<Storage> storages = repository.MakeVirtualBackUp(algorithm, backupJob.JobObjects, directory.Name, restorePoint);
+            List<Storage> storages = backup.MakeBackup(algorithm, backupJob.JobObjects, directory.Name, restorePoint, directory);
             restorePoint.Storages.AddRange(storages);
-        }
+        }*/
     }
 }
