@@ -8,8 +8,6 @@ namespace Backups.Services
     {
         DirectoryInfo CreateDirectory(string path);
         BackupJob CreateBackupJob();
-        Repository CreateRepository(DirectoryInfo directory);
-        void StartLocalBackup(IAlgorithm algorithm, List<JobObject> jobObjects, DirectoryInfo directory, BackupJob backupJob, Repository repository);
-        void StartVirtualBackup(IAlgorithm algorithm, List<JobObject> jobObjects, DirectoryInfo directory, BackupJob backupJob, Repository repository);
+        void StartBackup(IRepository backup, IAlgorithm algorithm, List<JobObject> jobObjects, DirectoryInfo directory, BackupJob backupJob);
     }
 }

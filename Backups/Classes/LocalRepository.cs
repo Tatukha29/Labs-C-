@@ -6,9 +6,16 @@ using Backups.Services;
 using Ionic.Zip;
 namespace Backups.Classes
 {
-    public class Local : IRepository
+    public class LocalRepository : IRepository
     {
-        public List<Storage> MakeBackup(IAlgorithm algorithm, List<JobObject> jobObjects, RestorePoint restorePoint, DirectoryInfo directory)
+        public LocalRepository(DirectoryInfo directory)
+        {
+            Directory = directory;
+        }
+
+        public DirectoryInfo Directory { get; }
+
+        public List<Storage> MakeBackup(IAlgorithm algorithm, List<JobObject> jobObjects, RestorePoint restorePoint)
         {
             List<Storage> storages = algorithm.MakeStorages(jobObjects);
             string path;
@@ -18,12 +25,12 @@ namespace Backups.Classes
                 foreach (JobObject jobObject in storage.ListJobObject.ToList())
                 {
                     zip.AddFile(jobObject.FullPath(), "/");
-                    path = @$"{directory.FullName}/{directory.Name}/{jobObject.Path.Name}{restorePoint.Id}.zip";
+                    path = @$"{Directory.FullName}/{Directory.Name}/{jobObject.Path.Name}{restorePoint.Id}.zip";
                     JobObject newJobObject = new JobObject(new FileInfo(path));
                     storage.AddJobObject(newJobObject);
                 }
 
-                zip.Save($@"{directory.FullName}/BackUp{storage.Id}.zip");
+                zip.Save($@"{Directory.FullName}/BackUp{storage.Id}.zip");
             }
 
             return storages;

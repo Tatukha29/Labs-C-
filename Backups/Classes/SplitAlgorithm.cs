@@ -3,7 +3,7 @@ using Backups.Services;
 
 namespace Backups.Classes
 {
-    public class Split : IAlgorithm
+    public class SplitAlgorithm : IAlgorithm
     {
         public List<Storage> MakeStorages(List<JobObject> jobObjects)
         {

@@ -3,7 +3,7 @@ using System.IO;
 using Backups.Classes;
 using Backups.Services;
 using Ionic.Zip;
-using Single = Backups.Classes.Single;
+using Single = Backups.Classes.SingleAlgorithm;
 
 namespace Backups
 {
@@ -14,7 +14,7 @@ namespace Backups
             BackupService backupService = new BackupService();
             DirectoryInfo directory = backupService.CreateDirectory(@"D:\backup\qwerty\Second");
             BackupJob backupJob = backupService.CreateBackupJob();
-            Repository repository = backupService.CreateRepository(directory);
+            IRepository repository = new LocalRepository(directory);
             JobObject jobObject1 = new JobObject(new FileInfo(@"D:\backup\qwerty\First\FileA"));
             JobObject jobObject2 = new JobObject(new FileInfo(@"D:\backup\qwerty\First\FileB"));
             List<JobObject> jobObjects = new List<JobObject>() { jobObject1, jobObject2 };
@@ -23,7 +23,7 @@ namespace Backups
                 backupJob.AddJobObject(jobObject);
             }
 
-            backupService.StartBackup(new Classes.Local(), algorithm: new Classes.Single(), jobObjects, directory, backupJob, repository);
+            backupService.StartBackup(repository, new SingleAlgorithm(), jobObjects, directory, backupJob);
         }
     }
 }

@@ -4,7 +4,7 @@ using Backups.Services;
 
 namespace Backups.Classes
 {
-    public class Single : IAlgorithm
+    public class SingleAlgorithm : IAlgorithm
     {
         public List<Storage> MakeStorages(List<JobObject> jobObjects)
         {

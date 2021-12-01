@@ -4,7 +4,7 @@ using Backups.Classes;
 
 namespace Backups.Services
 {
-    public class BackupService
+    public class BackupService : IBackupService
     {
         public DirectoryInfo CreateDirectory(string path)
         {
@@ -23,24 +23,11 @@ namespace Backups.Services
             return backupJob;
         }
 
-        public Repository CreateRepository(DirectoryInfo directory)
-        {
-            Repository repository = new Repository(directory);
-            return repository;
-        }
-
-        public void StartBackup(IRepository backup, IAlgorithm algorithm, List<JobObject> jobObjects, DirectoryInfo directory, BackupJob backupJob, Repository repository)
+        public void StartBackup(IRepository backup, IAlgorithm algorithm, List<JobObject> jobObjects, DirectoryInfo directory, BackupJob backupJob)
         {
             RestorePoint restorePoint = backupJob.CreateRestorePoint();
-            List<Storage> storages = backup.MakeBackup(algorithm, jobObjects, restorePoint, directory);
+            List<Storage> storages = backup.MakeBackup(algorithm, jobObjects, restorePoint);
             restorePoint.Storages.AddRange(storages);
         }
-
-        /*public void StartVirtualBackup(IRepository backup, IAlgorithm algorithm, List<JobObject> jobObjects, DirectoryInfo directory, BackupJob backupJob, Repository repository)
-        {
-            RestorePoint restorePoint = backupJob.CreateRestorePoint();
-            List<Storage> storages = backup.MakeBackup(algorithm, backupJob.JobObjects, directory.Name, restorePoint, directory);
-            restorePoint.Storages.AddRange(storages);
-        }*/
     }
 }

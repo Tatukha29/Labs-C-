@@ -6,6 +6,6 @@ namespace Backups.Services
 {
     public interface IRepository
     {
-        List<Storage> MakeBackup(IAlgorithm algorithm, List<JobObject> jobObjects, RestorePoint restorePoint, DirectoryInfo directory);
+        List<Storage> MakeBackup(IAlgorithm algorithm, List<JobObject> jobObjects, RestorePoint restorePoint);
     }
 }
