@@ -8,14 +8,15 @@ namespace IsuExtra.Classes
 {
     public class OgnpGroup
     {
-        public OgnpGroup(string ognpGroupName, DateTime time, int day, string teacher, int room)
+        public OgnpGroup(string ognpGroupName)
         {
             if (!string.IsNullOrEmpty(ognpGroupName))
             {
                 if (ognpGroupName.Length == 6 && ognpGroupName.Substring(4, 1) == "." && int.Parse(ognpGroupName.Substring(5, 1)) > 0 && int.Parse(ognpGroupName.Substring(5, 1)) < 6)
                 {
-                    LessonOgnp = new LessonOgnp(ognpGroupName, time, day, teacher, room);
+                    Name = ognpGroupName;
                     StudentsOgnp = new List<Student>();
+                    LessonsOgnp = new List<LessonOgnp>();
                 }
                 else
                 {
@@ -28,7 +29,8 @@ namespace IsuExtra.Classes
             }
         }
 
-        public LessonOgnp LessonOgnp { get; }
+        public string Name { get; }
         public List<Student> StudentsOgnp { get; }
+        public List<LessonOgnp> LessonsOgnp { get; }
     }
 }

@@ -62,14 +62,14 @@ namespace IsuExtra.Services
             return ognpCourse;
         }
 
-        public OgnpGroup AddOgnpGroup(OgnpCourse ognpCourse, string ognpGroupName, DateTime time, int day, string teacher, int room)
+        public OgnpGroup AddOgnpGroup(OgnpCourse ognpCourse, string ognpGroupName)
         {
             foreach (Ognp ognp in _ognpRepository.GetOgnpList())
             {
                 foreach (OgnpCourse course in ognp.Courses)
                 {
                     if (course != ognpCourse) continue;
-                    var newOgnpGroup = new OgnpGroup(ognpGroupName, time, day, teacher, room);
+                    var newOgnpGroup = new OgnpGroup(ognpGroupName);
                     course.OgnpGroups.Add(newOgnpGroup);
                     return newOgnpGroup;
                 }
@@ -78,14 +78,21 @@ namespace IsuExtra.Services
             throw new IsuExtraException("Something went wrong");
         }
 
-        public ScheduleGroup AddScheduleGroup(Group mainGroup, DateTime time, int day, string teacher, int room)
+        public LessonOgnp AddLessonOgnpGroup(OgnpGroup ognpGroup, DateTime time, DayOfWeek dayOfWeek, string teacher, int room)
+        {
+            var lessonOgnp = new LessonOgnp(time, dayOfWeek, teacher, room);
+            ognpGroup.LessonsOgnp.Add(lessonOgnp);
+            return lessonOgnp;
+        }
+
+        public ScheduleGroup AddScheduleGroup(Group mainGroup, DateTime time, DayOfWeek dayOfWeek, string teacher, int room)
         {
             if (_scheduleGroupRepository.GetSchedulGroupList().Where(schedule => schedule.Group == mainGroup).Any(schedule => schedule.Time.ToString("t") == time.ToString("t")))
             {
                 throw new IsuExtraException("Issues with time");
             }
 
-            var scheduleGroup = new ScheduleGroup(mainGroup, time, day, teacher, room);
+            var scheduleGroup = new ScheduleGroup(mainGroup, time, dayOfWeek, teacher, room);
             _scheduleGroupRepository.AddSchedulGroupList(scheduleGroup);
             return scheduleGroup;
         }
@@ -108,11 +115,14 @@ namespace IsuExtra.Services
                 {
                     foreach (var ognpGroup in course.OgnpGroups)
                     {
-                        if (((ognpGroup.LessonOgnp.Time.ToString("t") != scheduleGroup.Time.ToString("t")) || ognpGroup.LessonOgnp.DayOfWeek != scheduleGroup.DayOfWeek) && ognpGroup.StudentsOgnp.Count < _maxCountStudent)
+                        foreach (var lessonOgnp in ognpGroup.LessonsOgnp)
                         {
-                            ognpGroup.StudentsOgnp.Add(student);
-                            check++;
-                            break;
+                            if ((lessonOgnp.Time.ToString("t") != scheduleGroup.Time.ToString("t") || lessonOgnp.DayOfWeek != scheduleGroup.DayOfWeek) && ognpGroup.StudentsOgnp.Count < _maxCountStudent)
+                            {
+                                ognpGroup.StudentsOgnp.Add(student);
+                                check++;
+                                break;
+                            }
                         }
 
                         if (ognpGroup.StudentsOgnp.Count == _maxCountStudent)
