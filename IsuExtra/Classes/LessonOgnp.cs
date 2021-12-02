@@ -4,16 +4,18 @@ namespace IsuExtra.Classes
 {
     public class LessonOgnp
     {
-        public LessonOgnp(string ognpGroup, DateTime time, string teahcer, int room)
+        public LessonOgnp(string ognpGroupName, DateTime time, int dayOfWeek, string teacher, int room)
         {
-            Ognp = ognpGroup;
+            OgnpGroupName = ognpGroupName;
             Time = time;
-            Teacher = teahcer;
+            DayOfWeek = dayOfWeek;
+            Teacher = teacher;
             Room = room;
         }
 
-        public string Ognp { get; }
+        public string OgnpGroupName { get; }
         public DateTime Time { get; }
+        public int DayOfWeek { get; }
         public string Teacher { get; }
         public int Room { get; }
     }
