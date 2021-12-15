@@ -74,5 +74,10 @@ namespace Banks.Classes
 
             bankAccount.Money += money;
         }
+
+        public virtual void CountPercent(int amountMonth)
+        {
+            Money += ((Money / 100) * Percent) * amountMonth;
+        }
     }
 }

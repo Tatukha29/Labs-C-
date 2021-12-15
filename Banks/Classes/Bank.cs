@@ -60,21 +60,7 @@ namespace Banks.Classes
         {
             foreach (BankAccount bankAccount in BankAccounts)
             {
-                if (bankAccount is Debit)
-                {
-                    bankAccount.Money += ((bankAccount.Money / 100) * bankAccount.Percent) * amountMonth;
-                }
-
-                if (bankAccount is Deposit)
-                {
-                    bankAccount.Money += ((bankAccount.Money / 100) * bankAccount.Percent) * amountMonth;
-                }
-
-                if (bankAccount is Credit)
-                {
-                    var credit = (Credit)bankAccount;
-                    credit.OwesMoney += ((credit.OwesMoney / 100) * bankAccount.Percent) * amountMonth;
-                }
+                bankAccount.CountPercent(amountMonth);
             }
         }
     }

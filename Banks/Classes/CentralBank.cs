@@ -88,7 +88,7 @@ namespace Banks.Classes
         public Debit CreateDebitAccountClient(Bank bank, Client client, double money)
         {
             double limit;
-            if (client.GetPassport() != string.Empty)
+            if (client.GetPassport() != null)
             {
                 limit = int.MaxValue;
             }
@@ -106,7 +106,7 @@ namespace Banks.Classes
         public Deposit CreateDepositAccountClient(Bank bank, Client client, double money)
         {
             double limit;
-            if (client.GetPassport() != string.Empty)
+            if (client.GetPassport() != null)
             {
                 limit = int.MaxValue;
             }
@@ -133,7 +133,7 @@ namespace Banks.Classes
         public Credit CreateCreditAccountClient(Bank bank, Client client, double money)
         {
             double limit;
-            if (client.GetPassport() != string.Empty)
+            if (client.GetPassport() != null)
             {
                 limit = int.MaxValue;
             }

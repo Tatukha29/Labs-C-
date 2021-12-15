@@ -10,15 +10,6 @@ namespace Banks.Classes
         private string _address;
         private string _passport;
         private List<BankAccount> _listAccounts;
-
-        // public ClientBuilder(Client client, string firstName, string lastName, string address, string passport)
-        // {
-        //     _firstName = firstName;
-        //     _lastName = lastName;
-        //     _listAccounts = new List<BankAccount>();
-        //     _address = address;
-        //     _passport = passport;
-        // }
         public ClientBuilder AddFirstName(string firstName)
         {
             _firstName = firstName;

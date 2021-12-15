@@ -12,5 +12,10 @@ namespace Banks.Classes
         }
 
         public double OwesMoney { get; set; }
+
+        public override void CountPercent(int amountMonth)
+        {
+            OwesMoney += ((OwesMoney / 100) * Percent) * amountMonth;
+        }
     }
 }
