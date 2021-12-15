@@ -32,25 +32,14 @@ namespace IsuExtra.Services
                 throw new IsuExtraException("Empty naming");
             }
 
-            if (name.Length != 5 && int.Parse(name.Substring(4, 1)) != 3)
-            {
-                throw new IsuExtraException("Wrong naming");
-            }
-
             string megafaculty = name.Substring(3, 2);
-            bool check = false;
-            foreach (var checkOgnp in _ognpRepository.GetOgnpList().Where(checkognp => checkognp.Megafaculty == megafaculty))
-            {
-                check = true;
-            }
-
-            if (check == true)
+            if (_ognpRepository.GetAll().FirstOrDefault(checkognp => checkognp.Megafaculty == megafaculty) != null)
             {
                 throw new IsuExtraException("Ognp already exists");
             }
 
             var ognp = new Ognp(name);
-            _ognpRepository.AddOgnpList(ognp);
+            _ognpRepository.AddOgnp(ognp);
             return ognp;
         }
 
@@ -64,7 +53,7 @@ namespace IsuExtra.Services
 
         public OgnpGroup AddOgnpGroup(OgnpCourse ognpCourse, string ognpGroupName)
         {
-            foreach (Ognp ognp in _ognpRepository.GetOgnpList())
+            foreach (Ognp ognp in _ognpRepository.GetAll())
             {
                 foreach (OgnpCourse course in ognp.Courses)
                 {
@@ -93,39 +82,41 @@ namespace IsuExtra.Services
             }
 
             var scheduleGroup = new ScheduleGroup(mainGroup, time, dayOfWeek, teacher, room);
-            _scheduleGroupRepository.AddSchedulGroupList(scheduleGroup);
+            _scheduleGroupRepository.AddSchedulGroup(scheduleGroup);
             return scheduleGroup;
         }
 
         public Student AddStudentOgnp(Student student, Ognp ognpName)
         {
             string megafaculty = student.Group.Name.Name.Substring(0, 2);
-            if (_ognpRepository.GetOgnpList().Where(ognp => ognp == ognpName).Any(ognp => ognp.Megafaculty == megafaculty))
+            if (_ognpRepository.GetAll().FirstOrDefault(ognp => ognp == ognpName && ognp.Megafaculty == megafaculty) != null)
             {
                 throw new IsuExtraException("One megafaculty");
             }
 
             if (_allOgnpStudentsRepository.GetStudentSOgnpList().Any(students => students == student)) throw new IsuExtraException("Student are already signed up in ognp");
 
-            int check = 0;
             foreach (var scheduleGroup in _scheduleGroupRepository.GetSchedulGroupList())
             {
                 if (scheduleGroup.Group != student.Group) continue;
-                foreach (var course in _ognpRepository.GetOgnpList().Where(ognp => ognp == ognpName).SelectMany(ognp => ognp.Courses))
+                foreach (var course in _ognpRepository.GetAll().Where(ognp => ognp == ognpName).SelectMany(ognp => ognp.Courses))
                 {
                     foreach (var ognpGroup in course.OgnpGroups)
                     {
-                        foreach (var lessonOgnp in ognpGroup.LessonsOgnp)
+                        if (ognpGroup.StudentsOgnp.Count < _maxCountStudent)
                         {
-                            if ((lessonOgnp.Time.ToString("t") != scheduleGroup.Time.ToString("t") || lessonOgnp.DayOfWeek != scheduleGroup.DayOfWeek) && ognpGroup.StudentsOgnp.Count < _maxCountStudent)
+                            foreach (var lessonOgnp in ognpGroup.LessonsOgnp)
                             {
-                                ognpGroup.StudentsOgnp.Add(student);
-                                check++;
-                                break;
+                                if ((lessonOgnp.Time.ToString("t") != scheduleGroup.Time.ToString("t") || lessonOgnp.DayOfWeek != scheduleGroup.DayOfWeek) && ognpGroup.StudentsOgnp.Count < _maxCountStudent)
+                                {
+                                    ognpGroup.StudentsOgnp.Add(student);
+                                    break;
+                                }
+
+                                throw new IsuExtraException("You can't sign up this ognp");
                             }
                         }
-
-                        if (ognpGroup.StudentsOgnp.Count == _maxCountStudent)
+                        else
                         {
                             throw new IsuExtraException("No place");
                         }
@@ -133,14 +124,13 @@ namespace IsuExtra.Services
                 }
             }
 
-            if (check != 2) throw new IsuExtraException("Error");
-            _allOgnpStudentsRepository.AddStudentOgnpList(student);
+            _allOgnpStudentsRepository.AddStudentOgnp(student);
             return student;
         }
 
         public void RemoveStudentOgnp(Student student, Ognp ognp)
         {
-            _allOgnpStudentsRepository.RemoveStudentOgnpList(student);
+            _allOgnpStudentsRepository.RemoveStudentOgnp(student);
             foreach (var course in ognp.Courses)
             {
                 foreach (var ognpGroup in course.OgnpGroups)
@@ -152,12 +142,12 @@ namespace IsuExtra.Services
 
         public OgnpCourse GetOgnpCourse(OgnpCourse ognpCourse)
         {
-            return _ognpRepository.GetOgnpList().SelectMany(ognp => ognp.Courses).FirstOrDefault(course => course == ognpCourse);
+            return _ognpRepository.GetAll().SelectMany(ognp => ognp.Courses).FirstOrDefault(course => course == ognpCourse);
         }
 
         public OgnpGroup GetOgnpGroup(OgnpGroup ognpGroup)
         {
-            return _ognpRepository.GetOgnpList().SelectMany(ognp => ognp.Courses).SelectMany(course => course.OgnpGroups).FirstOrDefault(ognpGroups => ognpGroups == ognpGroup);
+            return _ognpRepository.GetAll().SelectMany(ognp => ognp.Courses).SelectMany(course => course.OgnpGroups).FirstOrDefault(ognpGroups => ognpGroups == ognpGroup);
         }
 
         public List<Student> StudentsWithoutOgnpGroup(List<Student> result)

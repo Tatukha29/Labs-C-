@@ -6,19 +6,18 @@ namespace IsuExtra.Classes
     {
         private List<Ognp> _ognps = new List<Ognp>();
 
-        public List<Ognp> AddOgnpList(Ognp ognp)
+        public Ognp AddOgnp(Ognp ognp)
         {
             _ognps.Add(ognp);
-            return _ognps;
+            return ognp;
         }
 
-        public List<Ognp> RemoveOgnpList(Ognp ognp)
+        public void RemoveOgnp(Ognp ognp)
         {
             _ognps.Remove(ognp);
-            return _ognps;
         }
 
-        public List<Ognp> GetOgnpList()
+        public List<Ognp> GetAll()
         {
             return _ognps;
         }

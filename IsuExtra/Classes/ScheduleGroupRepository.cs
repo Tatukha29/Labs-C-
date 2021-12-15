@@ -6,16 +6,15 @@ namespace IsuExtra.Classes
     {
         private List<ScheduleGroup> _scheduleGroups = new List<ScheduleGroup>();
 
-        public List<ScheduleGroup> AddSchedulGroupList(ScheduleGroup scheduleGroup)
+        public ScheduleGroup AddSchedulGroup(ScheduleGroup scheduleGroup)
         {
             _scheduleGroups.Add(scheduleGroup);
-            return _scheduleGroups;
+            return scheduleGroup;
         }
 
-        public List<ScheduleGroup> RemoveSchedulGroupList(ScheduleGroup scheduleGroup)
+        public void RemoveSchedulGroup(ScheduleGroup scheduleGroup)
         {
             _scheduleGroups.Remove(scheduleGroup);
-            return _scheduleGroups;
         }
 
         public List<ScheduleGroup> GetSchedulGroupList()

@@ -7,16 +7,15 @@ namespace IsuExtra.Classes
     {
         private List<Student> _allOgnpStudents = new List<Student>();
 
-        public List<Student> AddStudentOgnpList(Student student)
+        public Student AddStudentOgnp(Student student)
         {
             _allOgnpStudents.Add(student);
-            return _allOgnpStudents;
+            return student;
         }
 
-        public List<Student> RemoveStudentOgnpList(Student student)
+        public void RemoveStudentOgnp(Student student)
         {
             _allOgnpStudents.Remove(student);
-            return _allOgnpStudents;
         }
 
         public List<Student> GetStudentSOgnpList()
