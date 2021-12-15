@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Backups.Classes;
 using BackupsExtra.Services;
 
@@ -9,12 +10,9 @@ namespace BackupExtra.Classes
     {
         public List<RestorePoint> DeleteAlgorithm(BackupJob backupJob, int count, DateTime? dateTime)
         {
-            foreach (var restorePoint in backupJob.RestorePoints)
+            foreach (var restorePoint in backupJob.RestorePoints.Where(restorePoint => restorePoint.Data < dateTime))
             {
-                if (restorePoint.Data < dateTime)
-                {
-                    backupJob.RestorePoints.Remove(restorePoint);
-                }
+                backupJob.RestorePoints.Remove(restorePoint);
             }
 
             if (backupJob.RestorePoints.Count == 0)

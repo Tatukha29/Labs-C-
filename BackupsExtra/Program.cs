@@ -14,25 +14,25 @@ namespace BackupsExtra
     {
         private static void Main()
         {
-            BackupService backupService = new BackupService();
-            BackupExtraService backupExtraService = new BackupExtraService();
-            DirectoryInfo directory = backupService.CreateDirectory(@"D:\backup\qwerty\Second");
-            BackupJob backupJob = backupService.CreateBackupJob();
-            IRepository repository = new LocalRepository(directory);
-            JobObject jobObject1 = new JobObject(new FileInfo(@"D:\backup\qwerty\First\FileA"));
-            ConsoleLoger consoleLoger = new ConsoleLoger();
-            backupExtraService.Logger(new ConsoleLoger(), DateTime.Now, " Add job object");
-            JobObject jobObject2 = new JobObject(new FileInfo(@"D:\backup\qwerty\First\FileB"));
-            consoleLoger.Loger(DateTime.Now, " Add job object");
-            List<JobObject> jobObjects = new List<JobObject>() { jobObject1, jobObject2 };
-            foreach (var jobObject in jobObjects)
-            {
-                backupJob.AddJobObject(jobObject);
-            }
-
-            Json json = new Json();
-            json.Cerialize(backupJob);
-            json.Decerialize("D:\\oopitmo\\BackupsExtra\\bin\\Debug\\netcoreapp3.1\\tanya.json");
+        // BackupService backupService = new BackupService();
+        //     BackupExtraService backupExtraService = new BackupExtraService();
+        //     DirectoryInfo directory = backupService.CreateDirectory(@"D:\backup\qwerty\Second");
+        //     BackupJob backupJob = backupService.CreateBackupJob();
+        //     IRepository repository = new LocalRepository(directory);
+        //     JobObject jobObject1 = new JobObject(new FileInfo(@"D:\backup\qwerty\First\FileA"));
+        //     ConsoleLoger consoleLoger = new ConsoleLoger();
+        //     backupExtraService.Logger(new ConsoleLoger(), DateTime.Now, " Add job object");
+        //     JobObject jobObject2 = new JobObject(new FileInfo(@"D:\backup\qwerty\First\FileB"));
+        //     consoleLoger.Loger(DateTime.Now, " Add job object");
+        //     List<JobObject> jobObjects = new List<JobObject>() { jobObject1, jobObject2 };
+        //     foreach (var jobObject in jobObjects)
+        //     {
+        //         backupJob.AddJobObject(jobObject);
+        //     }
+        //
+        //     Json json = new Json();
+        //     json.Serialize(backupJob);
+        //     json.Deserialize("D:\\oopitmo\\BackupsExtra\\bin\\Debug\\netcoreapp3.1\\tanya.json");
         }
     }
 }

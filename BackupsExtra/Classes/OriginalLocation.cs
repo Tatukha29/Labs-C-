@@ -16,10 +16,7 @@ namespace BackupsExtra.Classes
             {
                 foreach (var jobObject in storage.ListJobObject)
                 {
-                    if (jobObject.Path.Name != "FileA" && jobObject.Path.Name != "FileB")
-                    {
-                        ZipFile.ExtractToDirectory(jobObject.FullPath(), path.FullName);
-                    }
+                    ZipFile.ExtractToDirectory(jobObject.FullPath(), path.FullName);
                 }
             }
         }

@@ -7,13 +7,13 @@ namespace BackupsExtra.Classes
 {
     public class Json : BackupService
     {
-        public void Cerialize(BackupJob backupJob)
+        public void Serialize(BackupJob backupJob)
         {
             string json = JsonConvert.SerializeObject(backupJob, Formatting.Indented, new Conversion());
             File.AppendAllText("tanya.json", json);
         }
 
-        public BackupJob Decerialize(string path)
+        public BackupJob Deserialize(string path)
         {
             JsonSerializerSettings settings = new JsonSerializerSettings()
             {

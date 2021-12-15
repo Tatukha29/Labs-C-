@@ -28,6 +28,7 @@ namespace Backups.Classes
                     path = @$"{Directory.FullName}/{restorePoint.Directory.Name}/{restorePoint.Id}.zip";
                     JobObject newJobObject = new JobObject(new FileInfo(path));
                     storage.AddJobObject(newJobObject);
+                    storage.RemoveJobObject(jobObject);
                 }
 
                 zip.Save($@"{Directory.FullName}/{restorePoint.Directory.Name}/{restorePoint.Id}.zip");

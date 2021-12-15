@@ -23,10 +23,9 @@ namespace Backups.Classes
                 foreach (JobObject jobObject in storage.ListJobObject.ToList())
                 {
                     path = @$"{Directory.FullName}/{restorePoint.Directory.Name}/{restorePoint.Id}.zip";
-
-                    // path = @$"{Directory.FullName}/{Directory.Name}/{jobObject.Path.Name}{restorePoint.Id}.zip";
                     JobObject newJobObject = new JobObject(new FileInfo(path));
                     storage.AddJobObject(newJobObject);
+                    storage.RemoveJobObject(jobObject);
                 }
             }
 
