@@ -19,7 +19,9 @@ namespace IsuExtra.Classes
 
         public List<ScheduleGroup> GetSchedulGroupList()
         {
-            return _scheduleGroups;
+            List<ScheduleGroup> newScheduleGroups = new List<ScheduleGroup>();
+            newScheduleGroups.AddRange(_scheduleGroups);
+            return newScheduleGroups;
         }
     }
 }

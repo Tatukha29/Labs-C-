@@ -19,7 +19,9 @@ namespace IsuExtra.Classes
 
         public List<Ognp> GetAll()
         {
-            return _ognps;
+            List<Ognp> newOgnp = new List<Ognp>();
+            newOgnp.AddRange(_ognps);
+            return newOgnp;
         }
     }
 }

@@ -20,7 +20,9 @@ namespace IsuExtra.Classes
 
         public List<Student> GetStudentSOgnpList()
         {
-            return _allOgnpStudents;
+            List<Student> newAllStudents = new List<Student>();
+            newAllStudents.AddRange(_allOgnpStudents);
+            return newAllStudents;
         }
     }
 }
