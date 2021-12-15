@@ -19,5 +19,10 @@ namespace Backups.Classes
         {
             ListJobObject.Add(jobObject);
         }
+
+        public void RemoveJobObject(JobObject jobObject)
+        {
+            ListJobObject.Remove(jobObject);
+        }
     }
 }

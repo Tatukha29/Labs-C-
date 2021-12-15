@@ -25,12 +25,12 @@ namespace Backups.Classes
                 foreach (JobObject jobObject in storage.ListJobObject.ToList())
                 {
                     zip.AddFile(jobObject.FullPath(), "/");
-                    path = @$"{Directory.FullName}/{Directory.Name}/{jobObject.Path.Name}{restorePoint.Id}.zip";
+                    path = @$"{Directory.FullName}/{restorePoint.Directory.Name}/{restorePoint.Id}.zip";
                     JobObject newJobObject = new JobObject(new FileInfo(path));
                     storage.AddJobObject(newJobObject);
                 }
 
-                zip.Save($@"{Directory.FullName}/BackUp{storage.Id}.zip");
+                zip.Save($@"{Directory.FullName}/{restorePoint.Directory.Name}/{restorePoint.Id}.zip");
             }
 
             return storages;

@@ -22,6 +22,8 @@ namespace Backups.Tests
         {
             BackupService backupService = new BackupService();
             DirectoryInfo directory = backupService.CreateDirectory(@"../../../Second");
+            string nameRestorePoint = "restore point 1";
+            string nameRestorePoint2 = "restore point 2";
             BackupJob backupJob = backupService.CreateBackupJob();
             IRepository repository = new VirtualRepository(directory);
             JobObject jobObject1 = new JobObject(new FileInfo(@"../../../../FileA"));
@@ -31,9 +33,9 @@ namespace Backups.Tests
             {
                 backupJob.AddJobObject(jobObject);
             }
-            backupService.StartBackup(repository,new SplitAlgorithm(), backupJob.JobObjects, directory, backupJob);
+            backupService.StartBackup(repository,new SplitAlgorithm(), backupJob.JobObjects, directory, backupJob, nameRestorePoint);
             backupJob.RemoveJobObject(jobObject1);
-            backupService.StartBackup(repository, new SplitAlgorithm(), backupJob.JobObjects, directory, backupJob);
+            backupService.StartBackup(repository, new SplitAlgorithm(), backupJob.JobObjects, directory, backupJob, nameRestorePoint2);
             var check = 0;
             foreach (var restorePoint in backupJob.RestorePoints)
             {
