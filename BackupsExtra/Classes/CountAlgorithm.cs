@@ -12,12 +12,8 @@ namespace BackupExtra.Classes
         public List<RestorePoint> DeleteAlgorithm(BackupJob backupJob, int count, DateTime? dateTime)
         {
             List<RestorePoint> trash = backupJob.RestorePoints;
-            List<RestorePoint> list = new List<RestorePoint>();
             RestorePoint point = backupJob.RestorePoints.Last();
-            foreach (var restorePoint in trash.Where(restorePoint => restorePoint.Data < point.Data))
-            {
-                list.AddRange(trash.Take(count));
-            }
+            var list = trash.Where(restorePoint => restorePoint.Data < point.Data).Take(count).ToList();
 
             foreach (var restorePoint in list)
             {
