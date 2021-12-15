@@ -28,8 +28,7 @@ namespace IsuExtra.Services
         public Ognp AddOgnp(string name)
         {
             var ognp = new Ognp(name);
-            string megafaculty = name.Substring(3, 2);
-            if (ognp.Megafaculty == megafaculty)
+            if (_ognpRepository.GetAll().FirstOrDefault(checkognp => checkognp.Megafaculty == ognp.Megafaculty) != null)
             {
                 throw new IsuExtraException("Ognp already exists");
             }
