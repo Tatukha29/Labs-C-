@@ -26,9 +26,9 @@ namespace Backups.Classes
             JobObjects.Remove(jobObject);
         }
 
-        public RestorePoint CreateRestorePoint()
+        public RestorePoint CreateRestorePoint(DirectoryInfo directory)
         {
-            RestorePoint restorePoint = new RestorePoint();
+            RestorePoint restorePoint = new RestorePoint(directory);
             RestorePoints.Add(restorePoint);
             return restorePoint;
         }

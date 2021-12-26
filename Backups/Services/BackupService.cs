@@ -23,9 +23,10 @@ namespace Backups.Services
             return backupJob;
         }
 
-        public void StartBackup(IRepository backup, IAlgorithm algorithm, List<JobObject> jobObjects, DirectoryInfo directory, BackupJob backupJob)
+        public void StartBackup(IRepository backup, IAlgorithm algorithm, List<JobObject> jobObjects, DirectoryInfo directory, BackupJob backupJob, string nameRestorePoint)
         {
-            RestorePoint restorePoint = backupJob.CreateRestorePoint();
+            DirectoryInfo directoryInfo = CreateDirectory(directory.ToString() + "/" + nameRestorePoint);
+            RestorePoint restorePoint = backupJob.CreateRestorePoint(directoryInfo);
             List<Storage> storages = backup.MakeBackup(algorithm, jobObjects, restorePoint);
             restorePoint.Storages.AddRange(storages);
         }

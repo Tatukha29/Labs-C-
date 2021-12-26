@@ -8,6 +8,6 @@ namespace Backups.Services
     {
         DirectoryInfo CreateDirectory(string path);
         BackupJob CreateBackupJob();
-        void StartBackup(IRepository backup, IAlgorithm algorithm, List<JobObject> jobObjects, DirectoryInfo directory, BackupJob backupJob);
+        void StartBackup(IRepository backup, IAlgorithm algorithm, List<JobObject> jobObjects, DirectoryInfo directory, BackupJob backupJob, string nameRestorePoint);
     }
 }

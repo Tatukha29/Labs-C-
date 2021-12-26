@@ -13,6 +13,7 @@ namespace Backups
         {
             BackupService backupService = new BackupService();
             DirectoryInfo directory = backupService.CreateDirectory(@"D:\backup\qwerty\Second");
+            string nameRestorePoint = "restore point1";
             BackupJob backupJob = backupService.CreateBackupJob();
             IRepository repository = new LocalRepository(directory);
             JobObject jobObject1 = new JobObject(new FileInfo(@"D:\backup\qwerty\First\FileA"));
@@ -23,7 +24,7 @@ namespace Backups
                 backupJob.AddJobObject(jobObject);
             }
 
-            backupService.StartBackup(repository, new SingleAlgorithm(), jobObjects, directory, backupJob);
+            backupService.StartBackup(repository, new SingleAlgorithm(), jobObjects, directory, backupJob, nameRestorePoint);
         }
     }
 }
